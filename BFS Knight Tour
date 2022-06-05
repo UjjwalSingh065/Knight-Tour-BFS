@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int n;
+ 
+int dx[] = {1, 1, -1, -1, -2, 2, -2, 2};
+int dy[] = {-2, 2, -2, 2, 1, 1, -1, -1};
+ 
+// Function for checking if the move is valid or not .............
+ 
+bool valid_move(int x, int y){
+ 
+    if((x >= 0 && x < n) && (y >= 0 && y < n))
+        return true;
+ 
+    return false;
+ 
+}
+ 
+// Applying breadth first search ..............
+ 
+int Knight_moves(vector<vector<bool> > marked, int x1, int y1, int x2, int y2){
+ 
+    queue<pair<pair<int,int>,int> > Queue;
+    // Filling the intial cell in queue to start breadth first search .............
+    Queue.push(make_pair(make_pair(x1,y1),0));
+ 
+    // Standard breadth first search .............
+    while(!Queue.empty()){
+ 
+        pair<pair<int,int>,int > cell = Queue.front();
+        int x = cell.first.first;
+        int y = cell.first.second;
+        int level = cell.second;
+        Queue.pop();
+ 
+        // If we are at destination cell, then return the value of level .............
+        if(x == x2 && y == y2)
+            return level;
+ 
+        for(int i = 0 ; i < 8 ; i ++){
+ 
+            // Generating co-ordinate of new cell ...............
+            int new_x = x + dx[i];
+            int new_y = y + dy[i];
+            
+ 
+            if(valid_move(new_x,new_y) && !marked[new_x][new_y]){
+ 
+                // If the move is valid and we have previously traversed new cell then push it into queue .........
+ 
+                Queue.push(make_pair(make_pair(new_x,new_y),level + 1));
+                marked[new_x][new_y] = true;
+ 
+            }
+ 
+        }
+ 
+    }
+ 
+    // If we were unable to reach destination cell return -1 .
+    return -1;
+ 
+}
+ 
+int main(){
+
+    cout<<"Enter the size of chess board: ";
+    cin >> n;
+    int x1, y1, x2, y2;
+    cout<<"enter the initial position of the knight: ";
+    cin >> x1 >> y1;
+    cout<<"enter the Final position of the knight: ";
+    cin >> x2 >> y2 ;
+ 
+    vector<vector<bool> > marked(n,vector<bool>(n,false));
+
+    if(Knight_moves(marked,x1,y1,x2,y2) == -1){
+        cout<<"the destination is not reachable by the knight ";
+    }
+ 
+    else{
+        cout<<"the steps required by the knight to reach the final position is\n";
+        cout << Knight_moves(marked,x1,y1,x2,y2) << endl;
+    } 
+}
